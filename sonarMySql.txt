@@ -1,0 +1,80 @@
+
+    2  apt install maven
+    3  apt update
+    4  apt install maven
+    5  sudo apt-get update
+    6  apt install java
+    7  sudo apt-get install default-jre
+    8  sudo apt-get install default-jdk
+    9  sudo add-apt-repository ppa:webupd8team/java
+   10  sudo apt-get update
+   11  sudo add-apt-repository ppa:webupd8team/java
+   12  sudo apt-get update -y
+   13  sudo apt-get install oracle-java8-installer -y
+   16  apt-get install mysql-server-5.7
+
+mysql -u root -p
+
+Then create database and user:
+# mysql -u root -p
+
+-- Create a new sonar database
+CREATE DATABASE sonar CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+-- Create a local and a remote user
+CREATE USER sonar@localhost IDENTIFIED BY 'sonar';
+CREATE USER sonar@'%' IDENTIFIED BY 'sonar';
+
+-- Grant users permissions
+GRANT ALL ON sonar.* TO sonar@localhost;
+GRANT ALL ON sonar.* TO sonar@'%';
+
+-- Check the results then exit
+use mysql
+SELECT * FROM user WHERE User='sonar'\G
+SELECT * FROM db WHERE User='sonar'\G
+QUIT
+FLUSH PRIVILEGES;
+
+   20  cd /opt/
+   21  ls
+   22  wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-5.6.7.zip
+   23  apt install unzip -y
+   24  ls
+   25  unzip sonarqube-5.6.7.zip
+   26  mv sonarqube-5.6.7/ sonar
+   27  ls
+   28  vi sonar/conf/sonar.properties
+  
+sonar.jdbc.username=sonar
+sonar.jdbc.password=sonar
+sonar.jdbc.url=jdbc:mysql://localhost:3306/sonar?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance
+  
+
+
+   29  cd sonar/bin/linux-x86-64/
+   30  ls
+   31  ./sonar.sh start
+
+
+
+jenkins 
+http://52.88.54.177:8080/configure
+    name sonar
+    Server URL	: http://54.218.22.161:9000/
+    Server authentication token	:
+
+
+sonar-scanner:
+
+sonar.projectKey=gameoflife
+sonar.projectName=gaamoflife
+sonar.projectVersion=1.0
+sonar.login=admin
+sonar.password=admin
+sonar.sources=.
+sonar.binaries=gameoflife-web/target/classes/com/wakaleo/gameoflife/webtests/controllers
+sonar.junit.reportsPath=gameoflife-web/target/surefire-reports
+sonar.jacoco.reportPath=gameoflife-web/target/jacoco.exec
+
+
